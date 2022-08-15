@@ -19,12 +19,12 @@ base_url="https://bing.com/HPImageArchive.aspx?"
 bing_url="$base_url$format$days_ago$image_count"
 
 # Use jq to parse the json and fetch the url of the first image (-r to remove quotes)
-img_url=$(curl -s $bing_url | jq -r ".images | .[0] | .url") || { echo "Failed retrieving image URL."; return; }
+img_url=$(curl -s $bing_url | jq -r ".images | .[0] | .url") || { echo "Failed retrieving image URL."; exit; }
 
 # Create the file where the image will be stored. 
 # Replace mktemp with something else if you want, I like it being a tmp file.
-file=$(mktemp) || { echo "Failed creating a file for the image."; return; }
-curl -s "https://bing.com$img_url" > $file || { echo "Failed installing the image to $file"; return; }
+file=$(mktemp) || { echo "Failed creating a file for the image."; exit; }
+curl -s "https://bing.com$img_url" > $file || { echo "Failed installing the image to $file"; exit; }
 
 # wait until curl finishes.
 wait
